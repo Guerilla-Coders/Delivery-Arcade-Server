@@ -2,10 +2,12 @@ import subprocess
 
 from flask import Flask, render_template
 from flask_socketio import SocketIO
-import network_definition as ndef
+from network_config import NetworkConfig
+
+config = NetworkConfig("network_config.json")
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = ndef.SERVER_SECRET_KEY
+app.config['SECRET_KEY'] = config.secret_key
 socketio = SocketIO(app)
 
 
@@ -49,19 +51,19 @@ websocket_relay_args = [
     str(arg) for arg in [
         'node',
         'websocket-relay.js',
-        ndef.SERVER_SECRET_KEY,
-        ndef.SERVER_VIDEO_POST_PORT_L,
-        ndef.SERVER_VIDEO_BROADCAST_PORT_L
+        config.secret_key,
+        config.ports.video.post.L,
+        config.ports.video.broadcast.L
     ]
 ]
 
 
 @app.route('/video')
 def sessions():
-    video_broadcast_port = ndef.SERVER_VIDEO_BROADCAST_PORT_L
+    video_broadcast_port = config.ports.video.broadcast.L
     return render_template('view-stream.html', video_broadcast_port=video_broadcast_port)
 
 
 if __name__ == '__main__':
     websocket_relay_process = subprocess.Popen(websocket_relay_args, stdout=subprocess.PIPE)
-    socketio.run(app, host=ndef.SERVER_IP, port=ndef.SERVER_CONTROL_PORT, debug=True)
+    socketio.run(app, host=config.ip, port=config.ports.control, debug=True)
