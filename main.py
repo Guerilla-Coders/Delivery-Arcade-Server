@@ -2,9 +2,10 @@ import subprocess
 
 from flask import Flask, render_template
 from flask_socketio import SocketIO
-from network_config import NetworkConfig
+from config_fetcher.config_fetcher import fetch_config
+from config_fetcher.network_config import NetworkConfig
 
-config = NetworkConfig("network_config.json")
+config = NetworkConfig(fetch_config("server"))
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = config.secret_key
