@@ -13,13 +13,13 @@ socketio = SocketIO(app)
 
 
 @socketio.on('connect', namespace='/app')
-def connect_handler(data):
-    print(f'APP CONNECTED sid: {data}')
+def connect_handler():
+    print(f'APP CONNECTED')
 
 
 @socketio.on('connect', namespace='/agent')
-def connect_handler(data):
-    print(f'AGENT CONNECTED sid: {data}')
+def connect_handler():
+    print(f'AGENT CONNECTED')
 
 
 @socketio.on('connect', namespace='/')
@@ -39,12 +39,14 @@ def disconnected_handler():
 
 @socketio.on('command', namespace='/app')
 def receive_command_from_app(data):
+    print(f"Received data type {type(data)}")
     print(f'Received command from app. sid: {data}')
     socketio.emit('command', data=data, namespace='/agent')
 
 
 @socketio.on('info', namespace='/agent')
 def receive_info_from_agent(data):
+    print(f"Received data type {type(data)}")
     print(f'Received info from agent. sid: {data}')
 
 
