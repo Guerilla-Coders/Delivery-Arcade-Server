@@ -4,6 +4,7 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO
 from config_fetcher.config_fetcher import fetch_config
 from config_fetcher.network_config import NetworkConfig
+from datatypes import commands
 
 config = NetworkConfig(fetch_config("server"))
 
@@ -39,9 +40,12 @@ def disconnected_handler():
 
 @socketio.on('command', namespace='/app')
 def receive_command_from_app(data):
-    print(f"Received data type {type(data)}")
-    print(f'Received command from app. sid: {data}')
-    socketio.emit('command', data=data, namespace='/agent')
+    print(f'Received command from app. {repr(data)}')
+    if 'joystick' in data:
+        joystick = commands.Joystick(data)
+        movement = joystick.as_movement()
+        print(f'Emitting command to agent. {repr(movement)}')
+        socketio.emit('command', data=dict(movement), namespace='/agent')
 
 
 @socketio.on('info', namespace='/agent')
