@@ -44,8 +44,11 @@ def receive_command_from_app(data):
     if 'joystick' in data:
         joystick = commands.Joystick(data)
         movement = joystick.as_movement()
-        print(f'Emitting command to agent. {repr(movement)}')
+        print(f'Emitting Movement to agent. {repr(movement)[:20]}')
         socketio.emit('command', data=dict(movement), namespace='/agent')
+    elif 'sound_effect' in data:
+        print(f'Emitting Sound Effect to agent. {repr(data)[:20]}')
+        socketio.emit('command', data=data, namespace='/agent')
 
 
 @socketio.on('info', namespace='/agent')
