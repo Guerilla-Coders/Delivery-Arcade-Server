@@ -5,6 +5,10 @@ from flask_socketio import SocketIO
 from config_fetcher.config_fetcher import fetch_config
 from config_fetcher.network_config import NetworkConfig
 from datatypes import commands
+import logging
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 config = NetworkConfig(fetch_config("server"))
 
@@ -40,7 +44,7 @@ def disconnected_handler():
 
 @socketio.on('command', namespace='/app')
 def receive_command_from_app(data):
-    print(f'Received command from app. {repr(data)}')
+    print(f'Received command from app. {repr(data)[:20]}')
     if 'joystick' in data:
         joystick = commands.Joystick(data)
         movement = joystick.as_movement()
@@ -53,8 +57,8 @@ def receive_command_from_app(data):
 
 @socketio.on('info', namespace='/agent')
 def receive_info_from_agent(data):
-    print(f"Received data type {type(data)}")
-    print(f'Received info from agent. sid: {data}')
+    data_preview = str(data)[:20]
+    print(f'Received info from agent. sid: {data_preview}')
 
 
 websocket_relay_args = [
@@ -76,4 +80,4 @@ def sessions():
 
 if __name__ == '__main__':
     websocket_relay_process = subprocess.Popen(websocket_relay_args, stdout=subprocess.PIPE)
-    socketio.run(app, host=config.ip, port=config.ports.control, debug=True)
+    socketio.run(app, host=config.ip, port=config.ports.control, debug=False)
