@@ -82,5 +82,7 @@ def sessions():
 
 
 if __name__ == '__main__':
-    websocket_relay_process = subprocess.Popen(websocket_relay_args, stdout=subprocess.PIPE)
+    print(f"Fetched config: {fetch_config('server')}")
+    websocket_relay_process = subprocess.Popen(websocket_relay_args)
+    print(f"Lauched websocket relay: {websocket_relay_args}")
     socketio.run(app, host=config.ip, port=config.ports.control, debug=False)

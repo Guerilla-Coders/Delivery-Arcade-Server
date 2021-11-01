@@ -14,26 +14,5 @@ class Limits:
 
 
 class SoundEffectsConstants:
-    """mode"""
-    GREETING = 0
-    APOLOGY = 1
-    APPRECIATION = 2
-    YIELD = 3
-    PIGEON = 4
-
-    DEFAULT_MODE = 0
-    FINAL_MODE = 4
-
-    """stochasiticity"""
-    RANDOM = 1
-
-    DEFAULT_RANDOM = 1
-    FINAL_RANDOM = 1
-
-    """language"""
-    ENGLISH = 0
-    KOREAN = 1
-    SPANISH = 2
-
-    DEFAULT_LANGUAGE = 0
-    FINAL_LANGUAGE = 2
+    code = ["GREETING", "APOLOGY", "APPRECIATION", "YIELD", "ALERT", "PIGEON"]
+    language = ["EN", "KR", "ES"]

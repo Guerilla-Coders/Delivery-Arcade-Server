@@ -97,18 +97,14 @@ class Joystick:
 sound_effects_example = {
     'type': 'command',
     'sound_effects': {
-        'mode': SoundEffectsConstants.DEFAULT_MODE,
-        'random': SoundEffectsConstants.DEFAULT_RANDOM,
-        'language': SoundEffectsConstants.DEFAULT_LANGUAGE
+        'code': 'ALERT'
     }
 }
 
 
 @dataclass
 class SoundEffect:
-    mode: int
-    random: int
-    language: int
+    code: str
 
     def __init__(self, *data):
         """
@@ -122,25 +118,18 @@ class SoundEffect:
         """
         if len(data) == 1 and type(data[0]) is dict:
             assert data[0]['type'] == 'sound_effects'
-            assert 0 <= data[0]['sound_effects']['mode'] <= SoundEffectsConstants.FINAL_MODE
-            assert 1 <= data[0]['sound_effects']['random'] <= SoundEffectsConstants.FINAL_RANDOM
-            assert 0 <= data[0]['sound_effects']['language'] <= SoundEffectsConstants.FINAL_LANGUAGE
+            assert data[0]['sound_effects']['code'] in SoundEffectsConstants.code
+            self.code = data[0]['sound_effects']['code']
 
-            self.mode = int(data[0]['sound_effects']['mode'])
-            self.random = int(data[0]['sound_effects']['random'])
-            self.language = int(data[0]['sound_effects']['language'])
-
-        elif len(data) == 3:
-            assert 0 <= data[0] < 5
-            assert 1 <= data[1] < 2
-            assert 0 <= data[2] < 3
-            self.mode, self.random, self.language = data
+        elif len(data) == 1 and type(data[0]) is str:
+            assert data[0] in SoundEffectsConstants.code
+            self.code = data[0]
         else:
             raise TypeError
 
     def __iter__(self):
         yield 'type', 'command'
-        yield 'sound_effects', {'mode': self.mode, 'random': self.random, 'language': self.language}
+        yield 'sound_effects', {'code': self.code}
 
 
 lid_action_example = {
